@@ -263,6 +263,10 @@ class LLMResumeJobDescription:
         })
         return output
     
+    def generate_latex_resume(self) -> str:
+        """generate_latex_resume"""
+        # TODO: Implement the logic to generate, follow steps similar to generate_html_resume
+        pass
 
     def generate_html_resume(self) -> str:
         # Define a list of functions to execute in parallel
