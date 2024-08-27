@@ -18,6 +18,8 @@ from langchain_community.vectorstores import FAISS
 from lib_resume_builder_AIHawk.config import global_config
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pylatex import Command, Document, Section, Subsection
+from pylatex.utils import NoEscape, italic, bold
 load_dotenv()
 
 
@@ -265,7 +267,49 @@ class LLMResumeJobDescription:
     
     def generate_latex_resume(self) -> str:
         """generate_latex_resume"""
+        # Define a list of functions to execute in parallel
+        def header_fn():
+            return self.generate_header()
+
+        def education_fn():
+            return self.generate_education_section()
+
+        def work_experience_fn():
+            return self.generate_work_experience_section()
+
+        def side_projects_fn():
+            return self.generate_side_projects_section()
+
+        def achievements_fn():
+            return self.generate_achievements_section()
+
+        def additional_skills_fn():
+            return self.generate_additional_skills_section()
+
+        # Create a dictionary to map the function names to their respective callables
+        functions = {
+            "header": header_fn,
+            "education": education_fn,
+            "work_experience": work_experience_fn,
+            "side_projects": side_projects_fn,
+            "achievements": achievements_fn,
+            "additional_skills": additional_skills_fn,
+        }
+
+        # Use ThreadPoolExecutor to run the functions in parallel
+        with ThreadPoolExecutor() as executor:
+            future_to_section = {executor.submit(fn): section for section, fn in functions.items()}
+            results = {}
+            for future in as_completed(future_to_section):
+                section = future_to_section[future]
+                try:
+                    results[section] = future.result()
+                except Exception as exc:
+                    print(f'{section} generated an exception: {exc}')
+
         # TODO: Implement the logic to generate, follow steps similar to generate_html_resume
+        
+        # Construct the final LaTeX resume from the results
         pass
 
     def generate_html_resume(self) -> str:
