@@ -122,6 +122,9 @@ if __name__ == "__main__":
 
     # 2. set job application resume
     resume_object = Resume(plain_text_resume)
+    print(f"\n================resume object==============================\n")
+    print(resume_object)
+    print(f"\n================resume object==============================\n")
 
     # 3. set gpt answer
     gpt_answerer = GPTAnswerer(
@@ -208,10 +211,9 @@ if __name__ == "__main__":
             f.write(job_example.description)
             f.close()
 
-    # TODO: 4.2 construct the corresponding resume section acording to the job description
     # Using langchain to customize prompt
 
-    # 4.2.1 create job analizer prompt
+    print("========================getting job description...=======================")
     job_description_prompt_template = PromptTemplate.from_template(
         """
         You are an expert job description analyst. Your role is to meticulously analyze and interpret job descriptions.
@@ -279,6 +281,8 @@ if __name__ == "__main__":
         Your analysis should be structured in a clear and organized document with distinct sections for each of the points listed above. Each section should contain:
         This comprehensive overview will serve as a guideline for the recruitment process, ensuring the identification of the most qualified candidates.
 
+        You should ALWAYS provide a [Yes/No/Not mentioned] answer at the end for whether the job can sponsor a visa or not.
+
         # Job Description:
         ```
         {text}
@@ -302,3 +306,12 @@ if __name__ == "__main__":
     )
 
     job_description = qa_chain.invoke("Provide, full job description")
+
+    print(f"job_description:\n {job_description}\n")
+    print("========================job description done=======================")
+
+    # TODO: 4.2 construct the corresponding resume section acording to the job description
+    #
+    # 4.2.1 create resume according to job description
+    # 4.2.1.1 create resume object
+    #
