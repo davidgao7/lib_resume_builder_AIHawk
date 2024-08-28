@@ -106,6 +106,7 @@ class LatexConfig:
             doc.packages.append(Package("fontspec"))
 
             # Set the main font to Arial
+            # preamble: things to add before the document
             doc.preamble.append(NoEscape(rf"\setmainfont{{{font_type}}}"))
 
         # centered version of 'X' col. type for address, email, phone, linkin, personal website
@@ -136,6 +137,44 @@ class LatexConfig:
 
         # set bibitemsep
         doc.preamble.append(NoEscape(r"\setlength\bibitemsep{1em}"))
+
+        # inside the document object
+        # TODO: use gpt to generate the content of the document
+        # doc.append(NoEscape(r"\begin{tabularx}{\linewidth}{@{} C @{}}"))
+
+        doc.append(
+            NoEscape(r"""
+        %%% BEGIN OF THE DOCUMENT %%%
+
+        \begin{tabularx}{\linewidth}{@{} C @{}}
+        % TODO: Write my name in this style: \Huge{[NAME]} \\[4pt]
+        \end{tabularx}
+
+        %=== TODO: [Personal Information] START===%
+
+        %=== TODO: [Personal Information] END===%
+
+        %=== TODO: [[EDUCATION] START===%
+
+        %=== TODO: [[EDUCATION] END===%
+
+
+        %=== TODO: [[SKILLS] START===%
+
+        %=== TODO: [[SKILLS] END===%
+
+        %=== TODO: [[EXPERIENCE] START===%
+
+        %=== TODO: [[EXPERIENCE] END===%
+
+        
+        %=== TODO: [[PROJECTS] START===%
+
+        %=== TODO: [[PROJECTS] END===%
+
+        %%% END OF THE DOCUMENT %%%
+        """)
+        )
 
         self.doc = doc
 
