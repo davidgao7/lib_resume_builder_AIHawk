@@ -1,4 +1,4 @@
-from pylatex import Document, Command, Package
+from pylatex import Document, Command, Package, NoEscape
 from pylatex.utils import NoEscape
 from dotenv import load_dotenv
 import os
@@ -33,6 +33,8 @@ class LatexConfig:
         indent: bool = True,
         geometry_options: dict = None,
         data: list = None,
+        font_type: str = "Arial",
+        document_style: str = "empty",
     ):
         """
         A class that contains a full LaTeX document.
@@ -76,8 +78,8 @@ class LatexConfig:
             data=data,
         )
 
-        # TODO: latex document settings are not registered!
-        print(doc)
+        # set document style
+        doc.change_document_style(document_style)
 
         for package_name, package_options in packages.items():
             if len(package_options) > 0:
@@ -97,6 +99,43 @@ class LatexConfig:
         if geometry_options:
             geometry_command = Command("geometry", options=geometry_options)
             doc.packages.append(geometry_command)
+
+        # set font type
+        if font_type:
+            # Add the fontspec package
+            doc.packages.append(Package("fontspec"))
+
+            # Set the main font to Arial
+            doc.preamble.append(NoEscape(rf"\setmainfont{{{font_type}}}"))
+
+        # centered version of 'X' col. type for address, email, phone, linkin, personal website
+        doc.preamble.append(
+            NoEscape(r"\newcolumntype{C}{>{\centering\arraybackslash}X}")
+        )
+
+        doc.preamble.append(NoEscape(r"\newlength{\fullcollw}"))
+
+        doc.preamble.append(NoEscape(r"\setlength{\fullcollw}{0.42\textwidth}"))
+
+        # CV Sections inspired by: http://stefano.italians.nl/archives/26
+        doc.preamble.append(
+            NoEscape(
+                r"\titleformat{\section}{\scshape\raggedright}{}{0em}{}[\titlerule]"
+            )
+        )
+        doc.preamble.append(NoEscape(r"\titlespacing{\section}{1pt}{1pt}{1pt}"))
+
+        # setup hyperref
+        doc.preamble.append(NoEscape(r"\hypersetup{pdfborder = {0 0 0}}"))
+
+        # setup html color
+        doc.preamble.append(NoEscape(r"\color[HTML]{110223}"))
+
+        # add bibresource
+        doc.preamble.append(NoEscape(r"\addbibresource{citations.bib}"))
+
+        # set bibitemsep
+        doc.preamble.append(NoEscape(r"\setlength\bibitemsep{1em}"))
 
         self.doc = doc
 
