@@ -466,11 +466,13 @@ if __name__ == "__main__":
     print(f"resume_latex_str:\n {resume_latex_str}\n")
     print("\n=============Generate Resume =========================\n")
 
-    print("\n===saving tex file===\n")
+    print(
+        f"\n===saving tex file to {parent_parent_parent_dir}/generated_cv/result.tex===\n"
+    )
     with open(f"{parent_parent_parent_dir}/generated_cv/result.tex", "w") as f:
         f.write(resume_latex_str)
         f.close()
-    print("\n===saving tex file===\n")
+    print("\n===saved tex file===\n")
 
     # 4.2.2 generate the pdf file
     # TODO:
