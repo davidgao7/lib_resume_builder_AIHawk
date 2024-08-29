@@ -90,7 +90,7 @@ if __name__ == "__main__":
     )
 
     # genterate the .tex file
-    config.doc.generate_tex(f"{parent_parent_parent_dir}/generated_cv/result")
+    # config.doc.generate_tex(f"{parent_parent_parent_dir}/generated_cv/result")
 
     # NOTE: can also get doc object by config.doc
 
@@ -112,10 +112,23 @@ if __name__ == "__main__":
 
     # test use gpt to generate the content in .tex
     with open(
-        f"{parent_parent_parent_dir}/data_folder/plain_text_resume.yaml",
-        "r",
+        f"{parent_parent_parent_dir}/data_folder/plain_text_resume.yaml", "r"
+    ) as file:
+        plain_text_resume_ymal = yaml.safe_load(file)
+        print(f"plain_text_resume_ymal: {plain_text_resume_ymal}")
+
+        if not plain_text_resume_ymal:
+            raise Exception("plain_text_resume_ymal is not loaded correctly")
+
+        file.close()
+
+    with open(
+        f"{parent_parent_parent_dir}/data_folder/plain_text_resume.yaml", "r"
     ) as file:
         plain_text_resume = file.read()
+        print(f"plain_text_resume: {plain_text_resume}")
+
+        file.close()
 
     # 1. set the job application profile
     job_application_profile_object = JobApplicationProfile(plain_text_resume)
@@ -315,3 +328,37 @@ if __name__ == "__main__":
     # 4.2.1 create resume according to job description
     # 4.2.1.1 create resume object
     #
+    print("\n=============Generate Resume Section: Header=========================\n")
+
+    header_prompt_template = """
+        Act as an HR expert and resume writer specializing in ATS-friendly resumes. Your task is to create a professional and polished header for the resume. The header should:
+
+        1. **Contact Information**: Include your full name, city and country, phone number, email address, LinkedIn profile, GitHub profile, ande personal website.
+        2. **Formatting**: Ensure the contact details are presented clearly and are easy to read.
+
+        - **My information:**  
+        {personal_information}
+
+        - **Template to Use**
+
+        ```LaTex
+            {latex_template}
+        ```
+
+        the key word `COMPLETE_ME_`+ attribute is the where you need to fill in the information. 
+        the information needed to fill the `COMPLETE_ME` attributes have all been provided in `My information` section. 
+
+        The results should be provided in Latex format, Provide only the latex code for the resume, without any explanations or additional text and also without ```tex ```
+    """
+
+    header_prompt = ChatPromptTemplate.from_template(header_prompt_template)
+    personal_info_chain = header_prompt | llm | StrOutputParser()
+    header = personal_info_chain.invoke(
+        {
+            "personal_information": plain_text_resume_ymal["personal_information"],
+            "job_description": job_description,
+        }
+    )
+    print("\n=============Generate Resume Section: Header=========================\n")
+    print(f"header:\n {header}\n")
+    print("\n=============Generate Resume Section: Header=========================\n")
