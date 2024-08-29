@@ -136,7 +136,7 @@ class LatexConfig:
         doc.preamble.append(NoEscape(r"\addbibresource{citations.bib}"))
 
         # set bibitemsep
-        doc.preamble.append(NoEscape(r"\setlength\bibitemsep{1em}"))
+        # doc.preamble.append(NoEscape(r"\setlength\bibitemsep{1em}"))
 
         # inside the document object
         # TODO: use gpt to generate the content of the document

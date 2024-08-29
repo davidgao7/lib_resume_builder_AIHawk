@@ -61,7 +61,7 @@ if __name__ == "__main__":
         font_size="11pt",
         lmodern=True,
         textcomp=True,
-        page_numbers=True,
+        page_numbers=False,
         indent=True,
         geometry_options={"scale": 0.9, "top": ".4in", "bottom": ".4in"},
         packages={
@@ -130,6 +130,26 @@ if __name__ == "__main__":
 
         file.close()
 
+    # load latex header template
+    with open(
+        f"{parent_dir}/lib_resume_builder_AIHawk/resume_style/latex_resume_template_header.tex"
+    ) as file:
+        latex_resume_template_header = file.read()
+        print(
+            f"\n================================latex_resume_template_header start:=====================\n{latex_resume_template_header}\n================================latex_resume_template_header end:=====================\n"
+        )
+        file.close()
+
+    # load latex sections template
+    with open(
+        f"{parent_dir}/lib_resume_builder_AIHawk/resume_style/latex_resume_template_sections.tex"
+    ) as file:
+        latex_resume_template_sections = file.read()
+        print(
+            f"\n================================latex_resume_template_sections start:=====================\n{latex_resume_template_sections}\n================================latex_resume_template_sections end:=====================\n"
+        )
+        file.close()
+
     # 1. set the job application profile
     job_application_profile_object = JobApplicationProfile(plain_text_resume)
 
@@ -140,81 +160,139 @@ if __name__ == "__main__":
     print(f"\n================resume object==============================\n")
 
     # 3. set gpt answer
-    gpt_answerer = GPTAnswerer(
-        openai_api_key, model_name="gpt-4o-mini", temperature=0.8
-    )
+    gpt_answerer = GPTAnswerer(openai_api_key, model_name="gpt-4o", temperature=0.8)
 
     # 4. set the resume generator
     # TODO: 4.1 analyze the job description
     # NOTE: this is just a random job post I found on LinkedIn, no offense to anyone/any company
     job_example = Job(
-        title="Senior Machine Learning Engineer",
-        company="Orbis Group",
+        title="Machine Learning Engineer, Core Ranking ",
+        company="Reddit, Inc.",
         location="United States",
-        link="https://www.linkedin.com/jobs/view/4009774636",
+        link="https://www.linkedin.com/jobs/view/3992823175/",
         apply_method="LinkedIn",
         description="""
         About the job
+        Reddit is a community of communities. It’s built on shared interests, passion, and trust and is home to the most open and authentic conversations on the internet. Every day, Reddit users submit, vote, and comment on the topics they care most about. With 100,000+ active communities and approximately 82M+ daily active unique visitors, Reddit is one of the internet’s largest sources of information. For more information, visit redditinc.com.
 
-        Principal ML Engineer - Recommendation and Personalization
+        Location:
 
+        This role is completely remote-friendly. If you happen to live close to one of our physical office locations, our doors are open for you to come into the office as often as you'd like.
 
-        A conversational AI start-up is expanding it's engineering team with the hire of a Staff or Principal-level ML Engineer to research, develop and deploy models for a consumer-facing conversational AI agent.
+        Team Description
 
+        As a member of the Core Ranking ML team, you’ll work with the billions of events and terabytes of data generated every day to personalize Reddit for each of our over 50 million daily users, helping them to connect with their communities and discover the best of Reddit.
 
-        You'd report to the CTO as one of the most senior individual contributor hires, owning a wide breadth of responsibilities and having a huge sphere of influence.
+        Role Description
 
+        As a Machine Learning Engineer, Core Ranking, this person will own projects from ideation to production, not just make small incremental gains on enterprise systems. This person will collaborate with other software engineers to improve the recommendation systems and models that power personalization and discovery across all of Reddit!
 
-        Principal ML Engineer Responsibilities
+        Responsibilities
 
-
-            Set the technical direction and drive the strategy and systems design for the team
-            Hands-on work - research, development, deployment, optimization etc.
-            Act as a senior IC working closely with leadership and some mentoring of juniors
-
-
-        Principal ML Engiener Requirements
-
-
-            PhD in STEM subject - ideally CompSci or similar
-            4+ years of professional, post academic experience, ideally in a start-up
-            Knowledge of recommendation and personalization ML systems
-            Knowledge of Python, Node, Pandas, Pytorch, Kubernetes, GCP etc.
+            Train, evaluate, and deploy sophisticated machine learning models to improve experiences for millions of users
+            Participate in the full software development cycle: design, develop, QA, deploy, experiment, analyze and iterate
+            Collaborate across disciplines and with other ML teams at Reddit to find technical solutions to complex challenges
 
 
-        This is a unique opportunity to join a highly decorated founding team of ~30, where you can make a large impact from day one and get in on the ground floor of a rapidly scaling business.
+        Required Qualifications
+
+            2-3+ years of hands-on, post-grad, non-internship professional experience with Machine Learning in a production-based environment
+            Solid theoretical knowledge of Machine Learning and Statistical concepts, including Deep Learning, as well as performance tradeoffs. Experience with recommender and/or ranking systems is a plus.
+            Experience with at least 1 of: Tensorflow, Keras, PyTorch
+            Experience working with data-intensive systems and writing production-quality software. Preferred Python or golang. Experience with kafka, ksql, and flink are a plus.
+            The ability to extract insight from data; proficient with SQL
+            Passionate about building delightful products for users
+            Strong communication and team-work skills
 
 
-        If you'd like to find out more, please don't hesitate to apply!
+        Benefits
+
+            Comprehensive Healthcare Benefits
+            401k Matching
+            Workspace benefits for your home office
+            Personal & Professional development funds
+            Family Planning Support
+            Flexible Vacation (please use them!) & Reddit Global Wellness Days
+            4+ months paid Parental Leave
+            Paid Volunteer time off
+
+
+        Pay Transparency
+
+        This job posting may span more than one career level.
+
+        In addition to base salary, this job is eligible to receive equity in the form of restricted stock units, and depending on the position offered, it may also be eligible to receive a commission. Additionally, Reddit offers a wide range of benefits to U.S.-based employees, including medical, dental, and vision insurance, 401(k) program with employer match, generous time off for vacation, and parental leave. To learn more, please visit https://www.redditinc.com/careers/.
+
+        To provide greater transparency to candidates, we share base pay ranges for all US-based job postings regardless of state. We set standard base pay ranges for all roles based on function, level, and country location, benchmarked against similar stage growth companies. Final offer amounts are determined by multiple factors including, skills, depth of work experience and relevant licenses/credentials, and may vary from the amounts listed below.
+
+        The Base Pay Range For This Position Is
+
+        $185,800—$260,100 USD
+
+        Reddit is proud to be an equal opportunity employer, and is committed to building a workforce representative of the diverse communities we serve. Reddit is committed to providing reasonable accommodations for qualified individuals with disabilities and disabled veterans in our job application procedures. If you need assistance or an accommodation due to a disability, please contact us at ApplicationAssistance@Reddit.com.
         """,
         summarize_job_description="""
-        Position: Principal ML Engineer - Recommendation and Personalization
-        Company: Conversational AI Start-Up
-        Location: (Not specified)
-        Reporting to: CTO
+        About the job
+        Reddit is a community of communities. It’s built on shared interests, passion, and trust and is home to the most open and authentic conversations on the internet. Every day, Reddit users submit, vote, and comment on the topics they care most about. With 100,000+ active communities and approximately 82M+ daily active unique visitors, Reddit is one of the internet’s largest sources of information. For more information, visit redditinc.com.
 
-        Responsibilities:
+        Location:
 
-            Set the technical direction and strategy for the ML team.
-            Engage in hands-on work, including research, development, deployment, and optimization of ML models.
-            Work closely with leadership and mentor junior team members.
+        This role is completely remote-friendly. If you happen to live close to one of our physical office locations, our doors are open for you to come into the office as often as you'd like.
 
-        Requirements:
+        Team Description
 
-            PhD in a STEM subject (preferably Computer Science).
-            4+ years of post-academic professional experience, ideally in a start-up environment.
-            Experience with recommendation and personalization ML systems.
-            Proficiency in Python, Node, Pandas, PyTorch, Kubernetes, and GCP.
+        As a member of the Core Ranking ML team, you’ll work with the billions of events and terabytes of data generated every day to personalize Reddit for each of our over 50 million daily users, helping them to connect with their communities and discover the best of Reddit.
 
-        Opportunity:
+        Role Description
 
-            Join a small, high-impact team at a rapidly growing start-up.
-            Significant influence from the start and a chance to contribute to a key technology initiative.
+        As a Machine Learning Engineer, Core Ranking, this person will own projects from ideation to production, not just make small incremental gains on enterprise systems. This person will collaborate with other software engineers to improve the recommendation systems and models that power personalization and discovery across all of Reddit!
 
-        Apply: (Apply if interested in joining a high-impact, scaling business.)
+        Responsibilities
+
+            Train, evaluate, and deploy sophisticated machine learning models to improve experiences for millions of users
+            Participate in the full software development cycle: design, develop, QA, deploy, experiment, analyze and iterate
+            Collaborate across disciplines and with other ML teams at Reddit to find technical solutions to complex challenges
+
+
+        Required Qualifications
+
+            2-3+ years of hands-on, post-grad, non-internship professional experience with Machine Learning in a production-based environment
+            Solid theoretical knowledge of Machine Learning and Statistical concepts, including Deep Learning, as well as performance tradeoffs. Experience with recommender and/or ranking systems is a plus.
+            Experience with at least 1 of: Tensorflow, Keras, PyTorch
+            Experience working with data-intensive systems and writing production-quality software. Preferred Python or golang. Experience with kafka, ksql, and flink are a plus.
+            The ability to extract insight from data; proficient with SQL
+            Passionate about building delightful products for users
+            Strong communication and team-work skills
+
+
+        Benefits
+
+            Comprehensive Healthcare Benefits
+            401k Matching
+            Workspace benefits for your home office
+            Personal & Professional development funds
+            Family Planning Support
+            Flexible Vacation (please use them!) & Reddit Global Wellness Days
+            4+ months paid Parental Leave
+            Paid Volunteer time off
+
+
+        Pay Transparency
+
+        This job posting may span more than one career level.
+
+        In addition to base salary, this job is eligible to receive equity in the form of restricted stock units, and depending on the position offered, it may also be eligible to receive a commission. Additionally, Reddit offers a wide range of benefits to U.S.-based employees, including medical, dental, and vision insurance, 401(k) program with employer match, generous time off for vacation, and parental leave. To learn more, please visit https://www.redditinc.com/careers/.
+
+        To provide greater transparency to candidates, we share base pay ranges for all US-based job postings regardless of state. We set standard base pay ranges for all roles based on function, level, and country location, benchmarked against similar stage growth companies. Final offer amounts are determined by multiple factors including, skills, depth of work experience and relevant licenses/credentials, and may vary from the amounts listed below.
+
+        The Base Pay Range For This Position Is
+
+        $185,800—$260,100 USD
+
+        Reddit is proud to be an equal opportunity employer, and is committed to building a workforce representative of the diverse communities we serve. Reddit is committed to providing reasonable accommodations for qualified individuals with disabilities and disabled veterans in our job application procedures. If you need assistance or an accommodation due to a disability, please contact us at ApplicationAssistance@Reddit.com.
         """,
         pdf_path="data_folder/output/",
-        recruiter_link="https://www.linkedin.com/in/matt-herselman/",
+        recruiter_link="https://www.linkedin.com/jobs/view/3992823175/?alternateChannel=search&refId=32LBAOEiHtA2yZTxTJ2qug%3D%3D&trackingId=s22SvXsf7uVOJKURLoQZKQ%3D%3D",
     )
     print(job_example)
 
@@ -330,8 +408,10 @@ if __name__ == "__main__":
     #
     print("\n=============Generate Resume Section: Header=========================\n")
 
-    header_prompt_template = """
-        Act as an HR expert and resume writer specializing in ATS-friendly resumes. Your task is to create a professional and polished header for the resume. The header should:
+    resume_prompt_template = """
+        Act as an HR expert and resume writer specializing in ATS-friendly resumes. Your task is to create a professional and polished content for the resume. 
+
+        The header should:
 
         1. **Contact Information**: Include your full name, city and country, phone number, email address, LinkedIn profile, GitHub profile, ande personal website.
         2. **Formatting**: Ensure the contact details are presented clearly and are easy to read.
@@ -341,24 +421,85 @@ if __name__ == "__main__":
 
         - **Template to Use**
 
+        For the header, use the following template:
         ```LaTex
-            {latex_template}
+            {latex_resume_template_header}
         ```
 
-        the key word `COMPLETE_ME_`+ attribute is the where you need to fill in the information. 
-        the information needed to fill the `COMPLETE_ME` attributes have all been provided in `My information` section. 
+        The header components: address, email, phone number, linkedin, Github, personal website shouled be in one row and centered.
 
-        The results should be provided in Latex format, Provide only the latex code for the resume, without any explanations or additional text and also without ```tex ```
+        For body, use the following template:
+        ```LaTex
+            {latex_resume_template_sections}
+        ```
+
+        The body components: education, skills, experience, projects, certifications, and languages should be in separate sections.
+
+        IMPORTANT: If one page counldn't fit all the body components, then ONLY include education, skills, experience and projects, since these are more important.
+
+        IMPORTANT: If the address is too long to fit, ONLY write city, abbreviation of the country.
+
+        IMPORTANT: You should ALWAYS ALWAYS make sure the resume is ONE PAGE.
+
+        The key word `COMPLETE_ME_`+ attribute is the where you need to fill in the information. 
+
+        The information needed to fill the `COMPLETE_ME` attributes have all been provided in `My information` section. 
+
+        The result should be a filled one page resume in Latex format. The keywords for teach stacks which are matched with the job description SHOULD BE BOLD.
+
+        DO NOT LEAVE TOO MUCH WHITE SPACE. MAKE SURE THERES ONE PAGE OF CONTENT.
+
+        The result should be provided in Latex format, Provide only the latex code for the resume, without any explanations or additional text and also without ```tex ```
     """
 
-    header_prompt = ChatPromptTemplate.from_template(header_prompt_template)
-    personal_info_chain = header_prompt | llm | StrOutputParser()
-    header = personal_info_chain.invoke(
+    resume_prompt = ChatPromptTemplate.from_template(resume_prompt_template)
+    resume_chain = resume_prompt | llm | StrOutputParser()
+    resume_latex_str = resume_chain.invoke(
         {
             "personal_information": plain_text_resume_ymal["personal_information"],
             "job_description": job_description,
+            "latex_resume_template_header": latex_resume_template_header,
+            "latex_resume_template_sections": latex_resume_template_sections,
         }
     )
-    print("\n=============Generate Resume Section: Header=========================\n")
-    print(f"header:\n {header}\n")
-    print("\n=============Generate Resume Section: Header=========================\n")
+    print("\n=============Generate Resume =========================\n")
+    print(f"resume_latex_str:\n {resume_latex_str}\n")
+    print("\n=============Generate Resume =========================\n")
+
+    print("\n===saving tex file===\n")
+    with open(f"{parent_parent_parent_dir}/generated_cv/result.tex", "w") as f:
+        f.write(resume_latex_str)
+        f.close()
+    print("\n===saving tex file===\n")
+
+    # 4.2.2 generate the pdf file
+    # TODO:
+    # print("\n===generate the pdf file===\n")
+    # config.doc.generate_pdf(
+    #     f"{parent_parent_parent_dir}/generated_cv/result",
+    #     clean=True,  # Whether non-pdf files created that are created during compilation should be removed.
+    #     clean_tex=False,  # whether remove the generated tex file.
+    #     silent=True,  # whether show the output of the compilation
+    #     compiler="xelatex",  # for the package fontspec
+    # )
+    # ! Package keyval Error: [ undefined.
+    # See the keyval package documentation for explanation.
+    # Type  H <return>  for immediate help.
+    #  ...
+    #
+    # l.24 \geometry[
+    #                scale=0.9,top=.4in,bottom=.4in]%
+    # Try typing  <return>  to proceed.
+    # If that doesn't work, type  X <return>  to quit.
+    #
+    #
+    # Package geometry Warning: Over-specification in `v'-direction.
+    #     `height' (787.23175pt) is ignored.
+    #
+    #
+    # ! LaTeX Error: Missing \begin{document}.
+    #
+    # See the LaTeX manual or LaTeX Companion for explanation.
+    # Type  H <return>  for immediate help.
+    #
+    # print("\n===generate the pdf file===\n")
