@@ -428,26 +428,28 @@ if __name__ == "__main__":
 
         The header components: address, email, phone number, linkedin, Github, personal website shouled be in one row and centered.
 
-        For body, use the following template:
+        For body, use the following template, you can memorize the information for each section, you should fill my information in the template
+        related to the job description. The following just a template.
+
         ```LaTex
             {latex_resume_template_sections}
         ```
 
         The body components: education, skills, experience, projects, certifications, and languages should be in separate sections.
 
-        IMPORTANT: If one page counldn't fit all the body components, then ONLY include education, skills, experience and projects, since these are more important.
+        IMPORTANT: If one page counldn't fit all the body components, then ONLY include education, skills, experience and projects, since these sections are more important and valuable for hiring managers.
 
-        IMPORTANT: If the address is too long to fit, ONLY write city, abbreviation of the country.
+        IMPORTANT: If the address is too long to fit, ONLY write city and abbreviation of the state in this format: Boston, MA.
 
-        IMPORTANT: You should ALWAYS ALWAYS make sure the resume is ONE PAGE.
+        IMPORTANT: You should ALWAYS, ALWAYS make sure the resume is ONE PAGE.
 
-        The key word `COMPLETE_ME_`+ attribute is the where you need to fill in the information. 
+        The key word `COMPLETE_ME_`+ attribute and `TODO` is the where you need to fill in the information. 
 
-        The information needed to fill the `COMPLETE_ME` attributes have all been provided in `My information` section. 
+        The information needed to fill the `COMPLETE_ME` attributes have all been provided in **My information** mentioned above. 
 
         The result should be a filled one page resume in Latex format. The keywords for teach stacks which are matched with the job description SHOULD BE BOLD.
 
-        DO NOT LEAVE TOO MUCH WHITE SPACE. MAKE SURE THERES ONE PAGE OF CONTENT.
+        DO NOT LEAVE TOO MUCH WHITE SPACE IN THE RESUME. MAKE SURE THERES ONE PAGE OF CONTENT.
 
         The result should be provided in Latex format, Provide only the latex code for the resume, without any explanations or additional text and also without ```tex ```
     """
